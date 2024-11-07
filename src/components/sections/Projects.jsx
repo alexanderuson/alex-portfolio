@@ -1,7 +1,17 @@
+import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/Carousel";
 import { projects } from "@/data/projects";
 import placeholder from "@/assets/placeholder.png";
+import Lightbox from "yet-another-react-lightbox";
+
 export default function Projects() {
+  const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = projects.map((char) => ({
+    src: char.image,
+  }));
+
   return (
     <section
       id="projects"
@@ -18,7 +28,13 @@ export default function Projects() {
               aria-label={`Project ${index + 1}: ${project.title}`}
             >
               <div className="card">
-                <div className="card-image-container">
+                <div
+                  className="card-image-container"
+                  onClick={() => {
+                    setCurrentIndex(index);
+                    setOpen(true);
+                  }}
+                >
                   <img
                     src={project.image ? project.image : placeholder}
                     alt={`Image of ${project.title}`}
@@ -32,6 +48,16 @@ export default function Projects() {
           ))}
         </CarouselContent>
       </Carousel>
+
+      {open && (
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          slides={images}
+          index={currentIndex}
+          onIndexChange={setCurrentIndex}
+        />
+      )}
     </section>
   );
 }

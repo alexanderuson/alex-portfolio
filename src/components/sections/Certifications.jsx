@@ -1,8 +1,17 @@
+import { useState } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/Carousel";
 import { certifications } from "@/data/certifications";
 import placeholder from "@/assets/placeholder.png";
+import Lightbox from "yet-another-react-lightbox";
 
 export default function Certifications() {
+  const [open, setOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const images = certifications.map((char) => ({
+    src: char,
+  }));
+
   return (
     <section
       id="certifications"
@@ -19,7 +28,13 @@ export default function Certifications() {
               aria-label={`Certificate ${index + 1}`}
             >
               <div className="card">
-                <div className="card-image-container">
+                <div
+                  className="card-image-container"
+                  onClick={() => {
+                    setCurrentIndex(index);
+                    setOpen(true);
+                  }}
+                >
                   <img
                     src={certificate ? certificate : placeholder}
                     alt={`Image of Certificate ${index}`}
@@ -31,6 +46,15 @@ export default function Certifications() {
           ))}
         </CarouselContent>
       </Carousel>
+      {open && (
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          slides={images}
+          index={currentIndex}
+          onIndexChange={setCurrentIndex}
+        />
+      )}
     </section>
   );
 }
